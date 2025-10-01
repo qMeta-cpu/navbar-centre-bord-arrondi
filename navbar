@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Navbar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(180deg, rgba(50, 80, 60, 0.3) 0%, rgba(70, 100, 80, 0.2) 100%), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><rect fill="%23527a5f" width="1000" height="300"/></svg>');
+            background-size: cover;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: white;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000;
+            text-decoration: none;
+            z-index: 1001;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .pages-dropdown {
+            position: relative;
+            cursor: pointer;
+            color: #333;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .pages-dropdown::after {
+            content: '▼';
+            margin-left: 0.3rem;
+            font-size: 0.7rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icons a {
+            color: #333;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: #667eea;
+        }
+
+        .cta-button {
+            background: #000;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        .cta-button:hover {
+            background: #333;
+        }
+
+        .cta-button::before {
+            content: '💬';
+            font-size: 1rem;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2.5px;
+            background: #000;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 6rem 2rem 2rem;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .mobile-nav-links a:hover {
+            color: #667eea;
+        }
+
+        .mobile-pages {
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .mobile-pages::after {
+            content: '▼';
+            margin-left: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .mobile-social {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+
+        .mobile-social a {
+            color: #333;
+            font-size: 1.3rem;
+            transition: color 0.3s;
+        }
+
+        .mobile-social a:hover {
+            color: #667eea;
+        }
+
+        .mobile-cta {
+            background: #000;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .mobile-cta:hover {
+            background: #333;
+        }
+
+        .mobile-cta::before {
+            content: '💬';
+            font-size: 1.1rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+            backdrop-filter: blur(2px);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 968px) {
+            nav {
+                padding: 0.8rem 1.2rem;
+            }
+
+            .nav-center,
+            .nav-right {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            body.menu-open {
+                overflow: hidden;
+            }
+        }
+
+        @media (min-width: 969px) {
+            .mobile-menu {
+                display: none !important;
+            }
+
+            .overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>Startup</span>
+        </a>
+
+        <div class="nav-center">
+            <ul class="nav-links">
+                <li><a href="#solutions">Solutions</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+                <li class="pages-dropdown">
+                    <span>Pages</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-right">
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="Twitter">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="Instagram">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+            </div>
+            <a href="#contact" class="cta-button">Get in Touch</a>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-links">
+            <li><a href="#solutions">Solutions</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#about">About</a></li>
+            <li class="mobile-pages">Pages</li>
+        </ul>
+
+        <div class="mobile-social">
+            <a href="#" aria-label="Facebook">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+            </a>
+        </div>
+
+        <a href="#contact" class="mobile-cta">Get in Touch</a>
+    </div>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('overlay');
+        const body = document.body;
+
+        function toggleMenu() {
+            const isActive = hamburger.classList.contains('active');
+            
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            body.classList.toggle('menu-open');
+            
+            // Empêcher le scroll en arrière-plan quand le menu est ouvert
+            if (!isActive) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
+        }
+
+        function closeMenu() {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            body.classList.remove('menu-open');
+            body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', closeMenu);
+
+        // Fermer le menu lors du clic sur un lien
+        document.querySelectorAll('.mobile-nav-links a, .mobile-cta').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Fermer le menu avec la touche Échap
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && hamburger.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        // Gérer le redimensionnement de la fenêtre
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (window.innerWidth > 968 && hamburger.classList.contains('active')) {
+                    closeMenu();
+                }
+            }, 250);
+        });
+    </script>
+</body>
+</html>
